@@ -1,0 +1,24 @@
+version: "3"
+services:
+    app:
+        #image: tobjan/flask-demo:0.2
+        build: . 
+        depends_on:
+            - database
+        environment:
+            MYSQL_HOST: database
+            MYSQL_USER: user
+            MYSQL_PASS: superpassword
+            MYSQL_DB: flaskdb
+    database:
+        image: mariadb:10.4.3
+        environment:
+            MYSQL_USER: user
+            MYSQL_PASSWORD: superpassword
+            MYSQL_DATABASE: flaskdb
+            MYSQL_ROOT_PASSWORD: supersecret
+        healthcheck:
+            test: "/usr/bin/mysql --user=user --password=superpassword --execute \"SHOW DATABASES;\""
+            interval: 1m
+            timeout: 1s
+            retries: 5
